@@ -3,7 +3,13 @@ import { mongodbAdapter } from "better-auth/adapters/mongodb";
 import { MongoClient } from "mongodb";
 
 const uri = process.env.MONGODB_URI?.trim();
-const client = new MongoClient(uri);
+
+let client;
+if (!global._mongoClient) {
+  global._mongoClient = new MongoClient(uri);
+}
+client = global._mongoClient;
+
 const db = client.db("pizzahub");
 
 export const auth = betterAuth({
@@ -11,6 +17,7 @@ export const auth = betterAuth({
   secret: process.env.BETTER_AUTH_SECRET?.trim(),
   trustedOrigins: [
     "http://localhost:3000",
+    "http://localhost:3001",
     process.env.BETTER_AUTH_URL?.trim(),
   ].filter(Boolean),
   database: mongodbAdapter(db),

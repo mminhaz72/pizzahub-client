@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState, useCallback } from "react";
 import { authClient } from "@/lib/auth-client";
 
 const AuthContext = createContext(null);
@@ -11,7 +11,7 @@ export function AuthProvider({ children }) {
   const [token, setToken] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  const syncWithBackend = async (sessionUser, extraData = {}) => {
+  const syncWithBackend = useCallback(async (sessionUser, extraData = {}) => {
     try {
       const pendingRole =
         typeof window !== "undefined" ? localStorage.getItem("pizzahub_pending_role") : null;
@@ -48,22 +48,28 @@ export function AuthProvider({ children }) {
       setLoading(false);
     }
     return null;
-  };
+  }, []);
 
   useEffect(() => {
     if (sessionLoading) return;
 
-    if (session?.user) {
-      const savedToken = localStorage.getItem("pizzahub_jwt");
-      if (savedToken) setToken(savedToken);
-      syncWithBackend(session.user);
-    } else {
-      setDbUser(null);
-      setToken(null);
-      localStorage.removeItem("pizzahub_jwt");
-      setLoading(false);
-    }
-  }, [session, sessionLoading]);
+    let isMounted = true;
+    const initAuth = async () => {
+      if (session?.user) {
+        await syncWithBackend(session.user);
+      } else if (isMounted) {
+        setDbUser(null);
+        setToken(null);
+        localStorage.removeItem("pizzahub_jwt");
+        setLoading(false);
+      }
+    };
+
+    initAuth();
+    return () => {
+      isMounted = false;
+    };
+  }, [session, sessionLoading, syncWithBackend]);
 
   const refreshUser = async () => {
     if (!token) return;

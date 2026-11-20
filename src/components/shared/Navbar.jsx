@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
@@ -106,41 +107,43 @@ export default function Navbar() {
             <div className="h-9 w-24 rounded-lg bg-orange-100 dark:bg-zinc-800 animate-pulse" />
           ) : user ? (
             <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <button className="flex items-center gap-2.5 pl-2 pr-3 py-1.5 rounded-full border border-orange-200 dark:border-zinc-800 bg-orange-50/60 dark:bg-zinc-900 hover:bg-orange-100/70 transition cursor-pointer">
-                  <Avatar className="h-8 w-8">
-                    <AvatarImage src={user.image} alt={user.name} />
-                    <AvatarFallback className="bg-red-600 text-white font-bold text-xs">
-                      {user.name?.charAt(0)?.toUpperCase() || "U"}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div className="text-left">
-                    <p className="text-xs font-bold text-zinc-900 dark:text-white leading-none">
-                      {user.name}
-                    </p>
-                    <p className="text-[10px] font-semibold uppercase text-orange-600 mt-0.5">
-                      {user.role}
-                    </p>
-                  </div>
-                </button>
+              <DropdownMenuTrigger className="flex items-center gap-2.5 pl-2 pr-3 py-1.5 rounded-full border border-orange-200 dark:border-zinc-800 bg-orange-50/60 dark:bg-zinc-900 hover:bg-orange-100/70 transition cursor-pointer">
+                <Avatar className="h-8 w-8">
+                  <AvatarImage src={user.image} alt={user.name} />
+                  <AvatarFallback className="bg-red-600 text-white font-bold text-xs">
+                    {user.name?.charAt(0)?.toUpperCase() || "U"}
+                  </AvatarFallback>
+                </Avatar>
+                <div className="text-left">
+                  <p className="text-xs font-bold text-zinc-900 dark:text-white leading-none">
+                    {user.name}
+                  </p>
+                  <p className="text-[10px] font-semibold uppercase text-orange-600 mt-0.5">
+                    {user.role}
+                  </p>
+                </div>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-52">
-                <DropdownMenuLabel>
-                  <p className="font-bold text-sm">{user.name}</p>
-                  <p className="text-xs text-muted-foreground truncate">{user.email}</p>
-                </DropdownMenuLabel>
+                <DropdownMenuGroup>
+                  <DropdownMenuLabel>
+                    <p className="font-bold text-sm">{user.name}</p>
+                    <p className="text-xs text-muted-foreground truncate">{user.email}</p>
+                  </DropdownMenuLabel>
+                </DropdownMenuGroup>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem asChild>
-                  <Link href={getDashboardLink()} className="cursor-pointer flex items-center gap-2">
-                    <LayoutDashboard className="h-4 w-4 text-red-600" />
-                    Dashboard
-                  </Link>
+                <DropdownMenuItem
+                  onClick={() => router.push(getDashboardLink())}
+                  className="cursor-pointer flex items-center gap-2"
+                >
+                  <LayoutDashboard className="h-4 w-4 text-red-600" />
+                  Dashboard
                 </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link href="/dashboard/profile" className="cursor-pointer flex items-center gap-2">
-                    <User className="h-4 w-4 text-orange-600" />
-                    Profile Settings
-                  </Link>
+                <DropdownMenuItem
+                  onClick={() => router.push("/dashboard/profile")}
+                  className="cursor-pointer flex items-center gap-2"
+                >
+                  <User className="h-4 w-4 text-orange-600" />
+                  Profile Settings
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem
@@ -154,12 +157,18 @@ export default function Navbar() {
             </DropdownMenu>
           ) : (
             <div className="flex items-center gap-2">
-              <Button asChild variant="ghost" className="font-semibold">
-                <Link href="/sign-in">Sign In</Link>
-              </Button>
-              <Button asChild className="bg-red-600 hover:bg-red-700 text-white font-semibold shadow-sm">
-                <Link href="/sign-up">Sign Up</Link>
-              </Button>
+              <Link
+                href="/sign-in"
+                className="px-4 py-2 text-sm font-semibold rounded-md hover:bg-accent transition"
+              >
+                Sign In
+              </Link>
+              <Link
+                href="/sign-up"
+                className="px-4 py-2 text-sm bg-red-600 hover:bg-red-700 text-white font-semibold rounded-md shadow-sm transition"
+              >
+                Sign Up
+              </Link>
             </div>
           )}
         </div>
@@ -215,12 +224,20 @@ export default function Navbar() {
             </div>
           ) : (
             <div className="pt-3 border-t border-orange-100 dark:border-zinc-800 flex gap-2">
-              <Button asChild variant="outline" className="w-1/2">
-                <Link href="/sign-in" onClick={() => setMobileOpen(false)}>Sign In</Link>
-              </Button>
-              <Button asChild className="w-1/2 bg-red-600 hover:bg-red-700 text-white">
-                <Link href="/sign-up" onClick={() => setMobileOpen(false)}>Sign Up</Link>
-              </Button>
+              <Link
+                href="/sign-in"
+                onClick={() => setMobileOpen(false)}
+                className="w-1/2 py-2 text-center text-sm font-semibold border rounded-md"
+              >
+                Sign In
+              </Link>
+              <Link
+                href="/sign-up"
+                onClick={() => setMobileOpen(false)}
+                className="w-1/2 py-2 text-center text-sm font-semibold bg-red-600 hover:bg-red-700 text-white rounded-md"
+              >
+                Sign Up
+              </Link>
             </div>
           )}
         </div>
