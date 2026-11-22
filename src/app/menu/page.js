@@ -15,6 +15,8 @@ import {
 } from "@/components/ui/select";
 import { Search, MapPin, RotateCcw, Pizza } from "lucide-react";
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://pizzahub-server-red.vercel.app";
+
 const CATEGORIES = [
   "All",
   "Classic Pizzas",
@@ -45,9 +47,7 @@ function BrowseMenuContent() {
       if (location.trim()) params.append("location", location.trim());
       if (sort && sort !== "default") params.append("sort", sort);
 
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/menu-items?${params.toString()}`
-      );
+      const res = await fetch(`${API_URL}/menu-items?${params.toString()}`);
       if (res.ok) {
         const data = await res.json();
         setItems(data);
