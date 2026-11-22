@@ -8,6 +8,9 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Check, Sparkles, Loader2, CreditCard } from "lucide-react";
 
+const API_URL =
+  process.env.NEXT_PUBLIC_API_URL || "https://pizzahub-server-red.vercel.app";
+
 export default function VendorSubscriptionPage() {
   const { user, token } = useAuth();
   const [redirecting, setRedirecting] = useState(false);
@@ -17,7 +20,7 @@ export default function VendorSubscriptionPage() {
   const handleUpgrade = async () => {
     setRedirecting(true);
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/create-checkout-session`, {
+      const res = await fetch(`${API_URL}/create-checkout-session`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

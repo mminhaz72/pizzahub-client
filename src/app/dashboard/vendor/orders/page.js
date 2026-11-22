@@ -8,6 +8,9 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Check, X, Loader2, User, Calendar, MapPin } from "lucide-react";
 
+const API_URL =
+  process.env.NEXT_PUBLIC_API_URL || "https://pizzahub-server-red.vercel.app";
+
 export default function VendorCustomerOrdersPage() {
   const { token } = useAuth();
   const [orders, setOrders] = useState([]);
@@ -17,7 +20,7 @@ export default function VendorCustomerOrdersPage() {
   const fetchOrders = async () => {
     if (!token) return;
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/vendor/orders`, {
+      const res = await fetch(`${API_URL}/vendor/orders`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (res.ok) setOrders(await res.json());
@@ -35,17 +38,14 @@ export default function VendorCustomerOrdersPage() {
   const handleOrderAction = async (orderId, status) => {
     setUpdatingId(orderId);
     try {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/vendor/orders/${orderId}/status`,
-        {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({ status }),
-        }
-      );
+      const res = await fetch(`${API_URL}/vendor/orders/${orderId}/status`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ status }),
+      });
       const data = await res.json();
       if (res.ok) {
         toast.success(`Order ${status}!`);

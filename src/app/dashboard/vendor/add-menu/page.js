@@ -19,6 +19,9 @@ import {
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Loader2, Upload, PlusCircle } from "lucide-react";
 
+const API_URL =
+  process.env.NEXT_PUBLIC_API_URL || "https://pizzahub-server-red.vercel.app";
+
 const CATEGORIES = [
   "Classic Pizzas",
   "Vegetarian Pizzas",
@@ -51,7 +54,7 @@ export default function AddMenuItemPage() {
     try {
       const uploadedUrl = await uploadToImgBB(imageFile);
 
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/vendor/menu-items`, {
+      const res = await fetch(`${API_URL}/vendor/menu-items`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

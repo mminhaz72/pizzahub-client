@@ -24,6 +24,9 @@ import {
   Power,
 } from "lucide-react";
 
+const API_URL =
+  process.env.NEXT_PUBLIC_API_URL || "https://pizzahub-server-red.vercel.app";
+
 export default function VendorMenuItemsPage() {
   const { token } = useAuth();
   const [items, setItems] = useState([]);
@@ -34,7 +37,7 @@ export default function VendorMenuItemsPage() {
   const fetchMyItems = async () => {
     if (!token) return;
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/vendor/menu-items`, {
+      const res = await fetch(`${API_URL}/vendor/menu-items`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (res.ok) setItems(await res.json());
@@ -51,7 +54,7 @@ export default function VendorMenuItemsPage() {
 
   const handleDelete = async (id) => {
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/vendor/menu-items/${id}`, {
+      const res = await fetch(`${API_URL}/vendor/menu-items/${id}`, {
         method: "DELETE",
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -69,17 +72,14 @@ export default function VendorMenuItemsPage() {
   const handleToggleAvailability = async (item) => {
     const nextStatus = item.status === "approved" ? "inactive" : "approved";
     try {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/vendor/menu-items/${item._id}`,
-        {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({ status: nextStatus }),
-        }
-      );
+      const res = await fetch(`${API_URL}/vendor/menu-items/${item._id}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ status: nextStatus }),
+      });
       if (res.ok) {
         toast.success(`Item marked as ${nextStatus}`);
         fetchMyItems();
@@ -93,22 +93,19 @@ export default function VendorMenuItemsPage() {
     e.preventDefault();
     setSaving(true);
     try {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/vendor/menu-items/${editingItem._id}`,
-        {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({
-            itemName: editingItem.itemName,
-            price: editingItem.price,
-            location: editingItem.location,
-            description: editingItem.description,
-          }),
-        }
-      );
+      const res = await fetch(`${API_URL}/vendor/menu-items/${editingItem._id}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          itemName: editingItem.itemName,
+          price: editingItem.price,
+          location: editingItem.location,
+          description: editingItem.description,
+        }),
+      });
       if (res.ok) {
         toast.success("Menu item updated!");
         setEditingItem(null);
