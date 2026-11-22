@@ -4,9 +4,15 @@ import { MongoClient } from "mongodb";
 
 const uri = process.env.MONGODB_URI?.trim();
 
+const options = {
+  maxPoolSize: 10,
+  serverSelectionTimeoutMS: 5000,
+  socketTimeoutMS: 45000,
+};
+
 let client;
 if (!global._mongoClient) {
-  global._mongoClient = new MongoClient(uri);
+  global._mongoClient = new MongoClient(uri, options);
 }
 client = global._mongoClient;
 
@@ -18,9 +24,12 @@ export const auth = betterAuth({
   trustedOrigins: [
     "http://localhost:3000",
     "http://localhost:3001",
+    "https://pizzahub-client-pi.vercel.app",
     process.env.BETTER_AUTH_URL?.trim(),
   ].filter(Boolean),
-  database: mongodbAdapter(db),
+  database: mongodbAdapter(db, {
+    client,
+  }),
   emailAndPassword: {
     enabled: true,
   },

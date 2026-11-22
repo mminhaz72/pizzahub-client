@@ -5,7 +5,7 @@
 ---
 
 ## Live & Repository Links
-- **Live Website:** https://pizzahub-client.vercel.app *(Update after Vercel deploy)*
+- **Live Website:** https://pizzahub-client.vercel.app
 - **Client GitHub Repository:** https://github.com/mminhaz72/pizzahub-client
 - **Server GitHub Repository:** https://github.com/mminhaz72/pizzahub-server
 
