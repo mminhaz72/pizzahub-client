@@ -24,6 +24,9 @@ import {
 import { Card } from "@/components/ui/card";
 import { Search, ShieldBan, ShieldCheck, Loader2 } from "lucide-react";
 
+const API_URL =
+  process.env.NEXT_PUBLIC_API_URL || "https://pizzahub-server-red.vercel.app";
+
 export default function AdminManageUsersPage() {
   const { token, user: currentAdmin } = useAuth();
   const [users, setUsers] = useState([]);
@@ -40,7 +43,7 @@ export default function AdminManageUsersPage() {
       if (role !== "all") params.append("role", role);
 
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/admin/users?${params.toString()}`,
+        `${API_URL}/admin/users?${params.toString()}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -61,7 +64,7 @@ export default function AdminManageUsersPage() {
   const handleToggleBlock = async (targetUser) => {
     try {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/admin/users/${targetUser._id}/block`,
+        `${API_URL}/admin/users/${targetUser._id}/block`,
         {
           method: "PATCH",
           headers: {

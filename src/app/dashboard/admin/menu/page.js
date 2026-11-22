@@ -24,6 +24,9 @@ import {
 import { Card } from "@/components/ui/card";
 import { Search, Check, X, Trash2, Loader2 } from "lucide-react";
 
+const API_URL =
+  process.env.NEXT_PUBLIC_API_URL || "https://pizzahub-server-red.vercel.app";
+
 export default function AdminManageMenuPage() {
   const { token } = useAuth();
   const [items, setItems] = useState([]);
@@ -40,7 +43,7 @@ export default function AdminManageMenuPage() {
       if (status !== "all") params.append("status", status);
 
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/admin/menu-items?${params.toString()}`,
+        `${API_URL}/admin/menu-items?${params.toString()}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -61,7 +64,7 @@ export default function AdminManageMenuPage() {
   const handleStatusChange = async (id, nextStatus) => {
     try {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/admin/menu-items/${id}/status`,
+        `${API_URL}/admin/menu-items/${id}/status`,
         {
           method: "PATCH",
           headers: {
@@ -86,7 +89,7 @@ export default function AdminManageMenuPage() {
   const handleDelete = async (id) => {
     try {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/admin/menu-items/${id}`,
+        `${API_URL}/admin/menu-items/${id}`,
         {
           method: "DELETE",
           headers: { Authorization: `Bearer ${token}` },

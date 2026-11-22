@@ -15,6 +15,9 @@ import {
 import { Card } from "@/components/ui/card";
 import { Loader2, Lock } from "lucide-react";
 
+const API_URL =
+  process.env.NEXT_PUBLIC_API_URL || "https://pizzahub-server-red.vercel.app";
+
 export default function AdminTransactionsPage() {
   const { token } = useAuth();
   const [transactions, setTransactions] = useState([]);
@@ -24,7 +27,7 @@ export default function AdminTransactionsPage() {
     const fetchTransactions = async () => {
       if (!token) return;
       try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/transactions`, {
+        const res = await fetch(`${API_URL}/admin/transactions`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         if (res.ok) setTransactions(await res.json());

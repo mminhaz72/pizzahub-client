@@ -10,7 +10,6 @@ import {
   Pizza,
   Clock,
   Receipt,
-  DollarSign,
   Loader2,
 } from "lucide-react";
 import {
@@ -23,6 +22,9 @@ import {
   CartesianGrid,
 } from "recharts";
 
+const API_URL =
+  process.env.NEXT_PUBLIC_API_URL || "https://pizzahub-server-red.vercel.app";
+
 export default function AdminOverviewPage() {
   const { token } = useAuth();
   const [stats, setStats] = useState(null);
@@ -32,7 +34,7 @@ export default function AdminOverviewPage() {
     const fetchStats = async () => {
       if (!token) return;
       try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/stats`, {
+        const res = await fetch(`${API_URL}/admin/stats`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         if (res.ok) setStats(await res.json());
