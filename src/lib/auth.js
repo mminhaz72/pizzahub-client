@@ -56,10 +56,10 @@ export const auth = betterAuth({
     },
   },
   advanced: {
-    useSecureCookies: process.env.NODE_ENV === "production",
+    useSecureCookies: true,
     defaultCookieAttributes: {
       sameSite: "lax",
-      secure: process.env.NODE_ENV === "production",
+      secure: true,
     },
   },
   emailAndPassword: {

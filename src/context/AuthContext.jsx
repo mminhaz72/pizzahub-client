@@ -5,6 +5,8 @@ import { authClient } from "@/lib/auth-client";
 
 const AuthContext = createContext(null);
 
+const API_URL = (process.env.NEXT_PUBLIC_API_URL || "").replace(/\/$/, "");
+
 export function AuthProvider({ children }) {
   const { data: session, isPending: sessionLoading } = authClient.useSession();
   const [dbUser, setDbUser] = useState(null);
@@ -18,7 +20,7 @@ export function AuthProvider({ children }) {
       const pendingBusiness =
         typeof window !== "undefined" ? localStorage.getItem("pizzahub_pending_business") : null;
 
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/jwt`, {
+      const res = await fetch(`${API_URL}/auth/jwt`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -39,11 +41,22 @@ export function AuthProvider({ children }) {
         localStorage.removeItem("pizzahub_pending_business");
         return data.user;
       } else {
-        setDbUser(null);
-        setToken(null);
+        console.error("JWT endpoint failed:", data);
+        setDbUser({
+          email: sessionUser.email,
+          name: sessionUser.name,
+          image: sessionUser.image || "",
+          role: sessionUser.role || "customer",
+        });
       }
     } catch (error) {
       console.error("Backend JWT sync error:", error);
+      setDbUser({
+        email: sessionUser.email,
+        name: sessionUser.name,
+        image: sessionUser.image || "",
+        role: sessionUser.role || "customer",
+      });
     } finally {
       setLoading(false);
     }
@@ -74,7 +87,7 @@ export function AuthProvider({ children }) {
   const refreshUser = async () => {
     if (!token) return;
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/me`, {
+      const res = await fetch(`${API_URL}/users/me`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (res.ok) {
