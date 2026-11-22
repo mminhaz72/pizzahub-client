@@ -23,6 +23,9 @@ import {
   AlertCircle,
 } from "lucide-react";
 
+const API_URL =
+  process.env.NEXT_PUBLIC_API_URL || "https://pizzahub-server-red.vercel.app";
+
 export default function MenuItemDetailsPage() {
   const { id } = useParams();
   const router = useRouter();
@@ -55,7 +58,7 @@ export default function MenuItemDetailsPage() {
     if (!token) return;
     setLoading(true);
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/menu-items/${id}`, {
+      const res = await fetch(`${API_URL}/menu-items/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       const data = await res.json();
@@ -86,7 +89,7 @@ export default function MenuItemDetailsPage() {
 
     setSubmittingOrder(true);
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/orders`, {
+      const res = await fetch(`${API_URL}/orders`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -121,7 +124,7 @@ export default function MenuItemDetailsPage() {
     e.preventDefault();
     setSubmittingReview(true);
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/menu-items/${id}/reviews`, {
+      const res = await fetch(`${API_URL}/menu-items/${id}/reviews`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
