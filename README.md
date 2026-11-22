@@ -1,49 +1,68 @@
-# PizzaHub — Pizza Ordering & Delivery Platform
+# 🍕 PizzaHub — Online Pizza Ordering & Multi-Vendor Platform (Client)
 
-**PizzaHub** is a full-stack, role-based pizza ordering and delivery web application built with **Next.js (App Router)**, **Express.js**, **MongoDB**, **Better Auth**, **JWT**, and **Stripe**. Customers discover local pizzerias, search and filter artisan pizza menus, and schedule deliveries; Vendors manage restaurant menus and incoming orders with optional Premium upgrades via Stripe; and Admins oversee users, menu approvals, and verified platform transactions.
+PizzaHub is a modern, full-stack pizza ordering and multi-vendor food delivery web application built with **Next.js (App Router)**. It supports role-based dashboards for **Customers**, **Vendors**, and **Admins**, complete with Google OAuth authentication, menu management, order tracking, and online payment integration.
 
----
-
-## Live & Repository Links
-- **Live Website:** https://pizzahub-client.vercel.app
-- **Client GitHub Repository:** https://github.com/mminhaz72/pizzahub-client
-- **Server GitHub Repository:** https://github.com/mminhaz72/pizzahub-server
+- **Live Website:** [https://pizzahub-client-pi.vercel.app](https://pizzahub-client-pi.vercel.app)
+- **Backend API:** [https://pizzahub-server-red.vercel.app](https://pizzahub-server-red.vercel.app)
 
 ---
 
-## Key Features
-- **Role-Based Authentication & Authorization:** Powered by Better Auth (Email/Password + Google OAuth) synced with custom Express JWT tokens (`customer`, `vendor`, `admin`).
-- **Customer Experience:** Browse approved menus, search by name/toppings, filter by category & location, sort by price, rate/review pizzas, place scheduled orders, track visual order timelines, and cancel pending orders.
-- **Vendor Kitchen Management:** Publish pizza items with **ImgBB** image uploads, edit/pause/delete items, accept/reject incoming customer orders once, and upgrade to **Premium** via Stripe Checkout.
-- **Admin Control Center:** Search/filter registered users, block/unblock accounts, approve/reject/delete submitted menu items, and monitor an immutable Stripe transaction ledger.
-- **Modern Pizza-Themed UI/UX:** Warm cream, tomato red, and cheese orange palette with **Dark/Light Mode Toggle**, Framer Motion animations, Recharts analytics, and responsive ShadCN UI components.
+## ✨ Key Features
+
+- **Authentication & Account Linking:** Powered by **Better Auth** supporting both Email/Password sign-up and **Google OAuth**, synced with backend JWT authorization.
+- **Role-Based Dashboards:**
+  - **Customer:** Browse pizza menus, customize orders, complete online checkout, and track order statuses in real time.
+  - **Vendor:** Manage restaurant profile, create/update/delete pizza menu items with image uploads, monitor kitchen activity analytics, and process incoming customer orders.
+  - **Admin:** Oversee platform users, manage vendor approvals/blocks, and monitor overall system activity.
+- **Image Hosting:** Seamless pizza and profile image uploads powered by **ImgBB API**.
+- **Online Payments:** Dedicated payment checkout flow with success and cancellation handling.
+- **Responsive UI:** Built with **Tailwind CSS** and modern UI components for smooth performance across desktop and mobile devices.
 
 ---
 
-## Challenge Requirements Implementation Note
-1. **Advanced Search & Price Sorting:**
-   - Implemented dynamic MongoDB query filters in `GET /menu-items` using query parameters: `search` (case-insensitive `$regex` across `itemName`, `description`, and `vendorName`), `category`, `location`, and `sort` (`price_asc` -> `{ price: 1 }`, `price_desc` -> `{ price: -1 }`, `featured=true` -> `{ vendorPlan: -1, createdAt: -1 }`).
-2. **JWT & Role-Based Middleware Security:**
-   - Upon login/registration via Better Auth, the client requests a signed 7-day JWT from `POST /auth/jwt`. Protected Express endpoints chain `verifyToken` (validates `Authorization: Bearer <token>`), `verifyActiveUser` (blocks suspended users), and `verifyRole(...)` (enforces `admin`, `vendor`, or `customer` permissions), returning `401` or `403` on unauthorized access.
-3. **Verified Stripe Webhook Subscription Flow:**
-   - Vendor upgrades initiate a Stripe Checkout session via `POST /create-checkout-session`. Premium status (`subscriptionPlan: "premium"`) and `transactions` records are written exclusively inside the signature-verified `POST /webhook` handler (`checkout.session.completed`).
+## 🛠️ Tech Stack
+
+- **Framework:** Next.js (App Router)
+- **Styling:** Tailwind CSS
+- **Authentication:** Better Auth (Email/Password & Google OAuth) + Custom JWT Sync
+- **Database (Auth Session):** MongoDB Atlas
+- **Image Upload:** ImgBB API
+- **Deployment:** Vercel
 
 ---
 
-## Technology Stack (NPM Packages)
-- **Frontend:** `next`, `react`, `better-auth`, `framer-motion`, `lucide-react`, `next-themes`, `recharts`, `sonner`, `tailwindcss`, ShadCN UI (`@radix-ui/*`)
-- **Backend:** `express`, `mongodb`, `jsonwebtoken`, `stripe`, `cors`, `dotenv`
+## ⚙️ Environment Variables
 
----
+Create a `.env.local` file in the root directory of `pizzahub-client` and configure the following variables:
 
-## Environment Variables
-
-### Client (`.env.local`)
 ```env
-NEXT_PUBLIC_API_URL=http://localhost:5000
-MONGODB_URI=your_mongodb_connection_string
+```env
+MONGODB_URI=your_mongodb_atlas_connection_string
+BETTER_AUTH_SECRET=your_better_auth_secret_key
 BETTER_AUTH_URL=http://localhost:3000
-BETTER_AUTH_SECRET=your_better_auth_secret
-GOOGLE_CLIENT_ID=your_google_client_id
-GOOGLE_CLIENT_SECRET=your_google_client_secret
+NEXT_PUBLIC_APP_URL=http://localhost:3000
+NEXT_PUBLIC_API_URL=http://localhost:5000
+GOOGLE_CLIENT_ID=your_google_oauth_client_id
+GOOGLE_CLIENT_SECRET=your_google_oauth_client_secret
 NEXT_PUBLIC_IMGBB_API_KEY=your_imgbb_api_key
+```
+
+## 🚀 Getting Started Locally
+
+1. **Clone the repository:**
+   ```bash
+   git clone [https://github.com/mminhaz72/pizzahub-client.git](https://github.com/mminhaz72/pizzahub-client.git)
+   cd pizzahub-client
+   ```
+
+2. **Install dependencies:**
+   ```bash
+   npm install
+   ```
+
+3. **Run the development server:**
+   ```bash
+   npm run dev
+   ```
+
+4. Open [http://localhost:3000](http://localhost:3000) in your browser.
