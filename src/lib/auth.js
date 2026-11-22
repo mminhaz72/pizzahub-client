@@ -12,8 +12,6 @@ const options = {
 };
 
 let client;
-let clientPromise;
-
 if (!global._mongoClientPromise) {
   client = new MongoClient(uri, options);
   global._mongoClientPromise = client.connect();
@@ -22,7 +20,6 @@ if (!global._mongoClientPromise) {
 }
 global._mongoClient = client;
 
-// সার্ভারলেস ফাংশন চালু হওয়ার সাথে সাথে কানেকশন সচল রাখা
 await global._mongoClientPromise;
 const db = client.db("pizzahub");
 
@@ -38,6 +35,33 @@ export const auth = betterAuth({
   database: mongodbAdapter(db, {
     client,
   }),
+  user: {
+    additionalFields: {
+      role: {
+        type: "string",
+        defaultValue: "customer",
+      },
+      isBlocked: {
+        type: "boolean",
+        defaultValue: false,
+      },
+      businessName: {
+        type: "string",
+        defaultValue: "",
+      },
+      subscriptionPlan: {
+        type: "string",
+        defaultValue: "free",
+      },
+    },
+  },
+  advanced: {
+    useSecureCookies: process.env.NODE_ENV === "production",
+    defaultCookieAttributes: {
+      sameSite: "lax",
+      secure: process.env.NODE_ENV === "production",
+    },
+  },
   emailAndPassword: {
     enabled: true,
   },
