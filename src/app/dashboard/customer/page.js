@@ -23,6 +23,9 @@ import {
   CartesianGrid,
 } from "recharts";
 
+const API_URL =
+  process.env.NEXT_PUBLIC_API_URL || "https://pizzahub-server-red.vercel.app";
+
 export default function CustomerOverviewPage() {
   const { token, user } = useAuth();
   const [orders, setOrders] = useState([]);
@@ -32,7 +35,7 @@ export default function CustomerOverviewPage() {
     const fetchOrders = async () => {
       if (!token) return;
       try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/customer/orders`, {
+        const res = await fetch(`${API_URL}/customer/orders`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         if (res.ok) {

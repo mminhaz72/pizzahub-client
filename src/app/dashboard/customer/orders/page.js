@@ -24,6 +24,9 @@ import {
   Clock,
 } from "lucide-react";
 
+const API_URL =
+  process.env.NEXT_PUBLIC_API_URL || "https://pizzahub-server-red.vercel.app";
+
 export default function CustomerOrdersPage() {
   const { token } = useAuth();
   const [orders, setOrders] = useState([]);
@@ -33,7 +36,7 @@ export default function CustomerOrdersPage() {
   const fetchOrders = async () => {
     if (!token) return;
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/customer/orders`, {
+      const res = await fetch(`${API_URL}/customer/orders`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (res.ok) {
@@ -54,13 +57,10 @@ export default function CustomerOrdersPage() {
   const handleCancelOrder = async (orderId) => {
     setCancellingId(orderId);
     try {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/customer/orders/${orderId}/cancel`,
-        {
-          method: "PATCH",
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
+      const res = await fetch(`${API_URL}/customer/orders/${orderId}/cancel`, {
+        method: "PATCH",
+        headers: { Authorization: `Bearer ${token}` },
+      });
       const data = await res.json();
       if (res.ok) {
         toast.success("Order cancelled successfully");

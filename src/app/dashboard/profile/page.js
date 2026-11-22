@@ -12,6 +12,9 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Loader2, Save } from "lucide-react";
 
+const API_URL =
+  process.env.NEXT_PUBLIC_API_URL || "https://pizzahub-server-red.vercel.app";
+
 export default function ProfileSettingsPage() {
   const { user, token, refreshUser } = useAuth();
   const [name, setName] = useState(user?.name || "");
@@ -33,7 +36,7 @@ export default function ProfileSettingsPage() {
         imageUrl = await uploadToImgBB(imageFile);
       }
 
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/me`, {
+      const res = await fetch(`${API_URL}/users/me`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
