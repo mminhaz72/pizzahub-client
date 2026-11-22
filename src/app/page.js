@@ -57,9 +57,10 @@ export default function HomePage() {
   useEffect(() => {
     const fetchFeatured = async () => {
       try {
-        const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/menu-items?featured=true&limit=6`
-        );
+        const apiUrl =
+          process.env.NEXT_PUBLIC_API_URL ||
+          "https://pizzahub-server-red.vercel.app";
+        const res = await fetch(`${apiUrl}/menu-items?featured=true&limit=6`);
         if (res.ok) {
           const data = await res.json();
           setFeaturedItems(data);
